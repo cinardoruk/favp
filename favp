@@ -1,0 +1,65 @@
+#!/bin/zsh
+:<<COMMENT
+store frequently used paths
+display them using dmenu
+open new terminal window with the selected path
+TODO
+* detect whether this is being run for the first time
+* check for the existence of script_dir
+* detect shell used
+* inject heredoc into its config file w/ comment indicating this was done by this script
+* detect existence of dmenu
+* cmdline flag to inject var into rc
+* when run w/ no flag, if it was never run before, it will detect and backup rc file, then append prompt_command to actual
+COMMENT
+
+#detection of first time run
+flag_file="$HOME/.local/bin/.favp_first_run_flag"
+#$HOME/.local/bin/ feels like a decent place for this to live
+#script_dir=$HOME/.local/bin
+script_dir=$(pwd)
+
+#optionally
+#detect if script is in .local/bin
+#if not
+#copy self to .local/bin
+#append current location to .local/bin/favpaths
+#call .local/bin/favpaths
+#./local/bin/favpaths deletes the incorrectly placed script
+
+# if [ ! -f "$flag_file" ]; then
+	# detect existence of dmenu
+	# if no
+	# download, sudo make install
+	# if yes
+	# ;
+
+	# use dmenu to prompt whether to append to rc file
+	# if yes
+	# back up rc file
+	# append heredoc to rc file
+	# if no
+	# exit
+	# create $flag_file
+	# call main program function
+# else
+	# call main program function
+# fi
+
+
+:<<ZSHRC
+add this to your bashrc or zshrc
+
+raw=$script_dir"/raw_paths.txt"
+temp=$script_dir"/temp_raw_paths.txt"
+final=$script_dir"/paths.txt"
+
+PROMPT_COMMAND='pwd >> $raw; tail -n 1000 $raw > $temp && mv $temp $raw; sort $raw | uniq -c | sort -nr > $final'
+ZSHRC
+
+favp() {
+
+	cat $final | dmenu -l 10 | xargs -I {} st -e sh -c 'cd "{}" && exec $SHELL'
+}
+
+favp()

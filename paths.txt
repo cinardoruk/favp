@@ -1,0 +1,2 @@
+/home/cinar/progs/webdev/posterce
+/home/cinar/business/english_lessons
